@@ -36,7 +36,9 @@ In the circuit, starting with the first connection made were the LEDs. The green
 
 Embedded controller: The Arduino Mega 2560 is a microcontroller that is heavily based on the ATmega2560 AVR microcontroller. The microcontroller has 70 digital input/output pins. Each set of pins has their own unique function. There are 14 pins that can be used as PWM outputs and 16 can be used as analog inputs. There is an in-circuit system programming header, reset button, power jack, 16MHz resonator, and a USB connection. The Arduino just needs a usb cable or power adapter to get started. The Mega 2560 is different from the previous board as it does not use FTDI USB-to-Serial driver chips and uses Atmega8U2 programmed as a USB-to-Serial converter. The Mega 2560 has its own USB bootloader, which allows advanced users to reprogram it.
 •	Microcontroller: ATmega2560
+
 •	EEPROM: 4 KB
+
 •	DC current per I/O pin: 40mA
 •	DC current for 3.3V pin: 50mA 
 •	Flash memory: 256 KB (8KB being the bootloader)
