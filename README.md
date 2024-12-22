@@ -169,6 +169,7 @@ Solenoid: Push/Pull solenoids are linear solenoids are on/off Actuators that cre
 
 Below are diagrams of the solenoid’s stroke based on the force applied, response time, and duty cycles based on resistance values and voltage in DC.
 
+![image](https://github.com/user-attachments/assets/a4e21cba-7b33-44f6-8f00-28380759c1a4)
 
 
 
