@@ -151,6 +151,24 @@ LEDs (Light Emitting Diodes) are bulbed shaped diodes that emit light depending 
 # LED Colors & Voltage Ratings
 ![image](https://github.com/user-attachments/assets/12d2c4c9-82dd-4b0b-a81f-e6c5cc71ca12)
 
+# Solenoid:
+	Solenoid: Push/Pull solenoids are linear solenoids are on/off Actuators that create a force in one direction and reverse the force using a return spring. A solenoid is made out of a copper wire coil which is fastened tightly into a helix, a mobile plunger, and iron or steel housing. These linear solenoids have a very high holding force with very little power consumption. The solenoids can be used for heavy duty applications such as doors, drive rollers, lift mechanisms, friction brakes, pen plotters, and pen lifts. When a solenoid coil is energized, magnetic Flux moves between the fixed pole piece and plunger. The magnetism is brought together whether the polarity is different or not for the energizing current. The pull type solenoid comes from the incorporation of a pushrod attachment to the plunger that passes through the pole piece. The push/pull solenoid is designed for mechanical means to connect an armature or pull end and the base or push end of a certain device.
+ 
+•	Solenoid Voltage: 12V
+
+•	Solenoid Force: 20N
+
+•	Solenoid Type: Push/Pull
+
+•	Stroke: 10mm
+
+•	Frame type: Open Frame
+
+•	Solenoid Magnetism: Electromagnetic
+
+Below are diagrams of the solenoid’s stroke based on the force applied, response time, and duty cycles based on resistance values and voltage in DC.
+
+
 
 
 
