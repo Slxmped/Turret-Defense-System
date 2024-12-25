@@ -262,25 +262,39 @@ void getDistance() {
   long duration, inches, cm;
 
   // The HC-SR04 is triggered by a HIGH pulse of 2 or more microseconds.
+ 
   // Give a short LOW pulse beforehand to ensure a clean HIGH pulse
+  
   digitalWrite(pingTrig, LOW);
+  
   delayMicroseconds(5);
+  
   digitalWrite(pingTrig, HIGH);
+ 
   delayMicroseconds(10);
+ 
   digitalWrite(pingTrig, LOW);
 
   duration = pulseIn(pingEcho, HIGH);
+  
   distance = (duration / 2) / 29.1;
 
   // Convert the time into a distance
+ 
   inches = microsecondsToInches(duration);
+ 
   cm = microsecondsToCentimeters(duration);
+ 
   inches = constrain(inches, 100, 150);
 
   Serial.print(inches);
+ 
   Serial.print("in, ");
+  
   Serial.print(cm);
+  
   Serial.print("cm");
+  
   Serial.println();
 
   delay(100);  // Small delay to prevent overwhelming the serial output
@@ -289,40 +303,61 @@ void getDistance() {
 }
 
 long microsecondsToInches(long microseconds) {
+  
   return microseconds / 74 / 2;
+
 }
 
 long microsecondsToCentimeters(long microseconds) {
+  
   return microseconds / 29 / 2;
+  
 }
 
 void loop() {
+  
   // Main code to run repeatedly
+  
   getDistance();
 
   int currentState;
 
   // Check the condition to switch states
+  
   if (distance > 130) {
+    
     currentState = 0;
+    
     count = 0;
 
   } else if (distance <= 100)  {
+  
     count +=1;
+    
     if (count > 1){
+      
       currentState = 1;
+    
     }
    
   }
 
   // State transitions based on distance
+  
   switch (currentState) {
+    
     case 0:
+      
       CET_Turret_State.transitionTo(One);
+      
       break;
+    
     case 1:
+      
       CET_Turret_State.transitionTo(Two);
+     
       break;
+      
   }
 
   // Update the state machine
