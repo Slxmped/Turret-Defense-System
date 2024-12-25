@@ -188,48 +188,72 @@ In the design for the program, there were several steps and plans that had to be
 In short, the first segment of the flowchart is where global variables get assigned to the program. These variables setup the state machine, the components, and create holder variables for certain functionalities in the circuit. There are functions being opened and state machine variables being created. In the next portion of the chart is the setup statement which contains the components being initialized and setup to perform certain functions like the pin modes being changed to input and output, the servo and sensor being setup, and communications being setup for the serial monitor. The third is where the distance variable gets created using the ultrasonic sensor. This is setting up the calculations and the different pin interactions for the setup of the ultrasonic sensors distance detection to be setup. The next part further completes the setup of the get distance function by returning the inches and centimeters for distance detection. The next two parts are the two if conditions being checked for. In one condition, this detects for the first state and the next detects for the second state. Depending on which state is chosen, the next part chooses which state’s criteria has been met. Depending on the criteria that has been met, either the first function or second function is applied to the scenario thus completing the flow chart. 
 
 #include <FiniteStateMachine.h>
+
 #include <Servo.h>
 
 const int pingTrig = A0;
+
 const int pingEcho = A1;
+
 const int SOLENOID = 10;
+
 const byte NUMBER_OF_STATES = 2;
+
 long distance = 0; // Holds variable for distance  
+
 int count = 0;
+
 int count2 = 0;
 
 Servo myservo;
 void One_fn();
 void Two_fn();
 
+
 // Initialize states
+
 State One = State(One_fn);
+
 State Two = State(Two_fn);
 
 FSM CET_Turret_State = FSM(One); // Initialize state machine, start in state: One
 
 #define ledRed 13
+
 #define ledGreen 12
 
 int pos = 1500;  // Starting position for the servo (centered)
+
 int lastServoPosition = 1500;  // Remember the last position
+
 int sweepDirection = 1;  // 1 for forward, -1 for backward
+
 int stepSize = 100;  // Increment/decrement for servo movement
+
 unsigned long previousMillis = 0;  // Timing for servo movement
+
 const long interval = 20;  // Interval for non-blocking servo update (in ms)
 
 void setup() {
+  
   // Initialize serial communication
+  
   Serial.begin(9600);
+  
   pinMode(SOLENOID, OUTPUT);
+  
   pinMode(ledRed, OUTPUT);
+  
   pinMode(ledGreen, OUTPUT);
 
   myservo.attach(11);  // Servo control on pin 11
 
   // Initialize sensor pins
+  
   pinMode(pingTrig, OUTPUT); // change A0 pin mode to digital output
+  
   pinMode(pingEcho, INPUT);  // change A1 pin mode to digital input
+
 }
 
 
