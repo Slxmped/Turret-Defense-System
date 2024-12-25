@@ -175,7 +175,168 @@ Below are diagrams of the solenoid’s stroke based on the force applied, respon
 	
 USB port: The USB port serves its function as the primary communication between the Arduino board and the PC. The Arduino is connected via external connection from the Arduino to the PC using a USB cable. This allows the board to send and receive signals for programming and also applies power to the Arduino board. The voltage applied from the PC meets the standard 5V requirement from the Arduino board. The USB is known as a high-level data communication subsystem
 
+![image](https://github.com/user-attachments/assets/ce1a0876-1927-4158-a25b-8aac1c8c82ed)
+
+Power supply system: The power supply systems that were used in the project was the Arduino power supply of 5V from the PC connection and a 12V power supply adapter. In this project, a few components were powered by the USB connection and a few components were powered by the 12V voltage adapter. Most of the Arduino components such as the servo, ultrasonic sensor, and LEDs were powered by the default 5V from the USB connection. The solenoid and relay are powered from the 12V voltage adapter using a connection that separates the power and ground connections. The solenoid has a connection to the relay and the adapter has a connector to the relay. This relay then allows the 12V power supply to be compatible with the 5V Arduino circuit allowing full control.
+
+# Section C: Software Design
+
+In the design for the program, there were several steps and plans that had to be laid out and followed for this system to work. The following flowchart outlines all of the programming steps and procedures that needed to be done to create the program:
+
+![image](https://github.com/user-attachments/assets/abf7f317-4772-498b-9d93-6aecfa6fba00)
+
+In short, the first segment of the flowchart is where global variables get assigned to the program. These variables setup the state machine, the components, and create holder variables for certain functionalities in the circuit. There are functions being opened and state machine variables being created. In the next portion of the chart is the setup statement which contains the components being initialized and setup to perform certain functions like the pin modes being changed to input and output, the servo and sensor being setup, and communications being setup for the serial monitor. The third is where the distance variable gets created using the ultrasonic sensor. This is setting up the calculations and the different pin interactions for the setup of the ultrasonic sensors distance detection to be setup. The next part further completes the setup of the get distance function by returning the inches and centimeters for distance detection. The next two parts are the two if conditions being checked for. In one condition, this detects for the first state and the next detects for the second state. Depending on which state is chosen, the next part chooses which state’s criteria has been met. Depending on the criteria that has been met, either the first function or second function is applied to the scenario thus completing the flow chart. 
+
+#include <FiniteStateMachine.h>
+#include <Servo.h>
+
+const int pingTrig = A0;
+const int pingEcho = A1;
+const int SOLENOID = 10;
+const byte NUMBER_OF_STATES = 2;
+long distance = 0; // Holds variable for distance  
+int count = 0;
+int count2 = 0;
+
+Servo myservo;
+void One_fn();
+void Two_fn();
+
+// Initialize states
+State One = State(One_fn);
+State Two = State(Two_fn);
+
+FSM CET_Turret_State = FSM(One); // Initialize state machine, start in state: One
+
+#define ledRed 13
+#define ledGreen 12
+
+int pos = 1500;  // Starting position for the servo (centered)
+int lastServoPosition = 1500;  // Remember the last position
+int sweepDirection = 1;  // 1 for forward, -1 for backward
+int stepSize = 100;  // Increment/decrement for servo movement
+unsigned long previousMillis = 0;  // Timing for servo movement
+const long interval = 20;  // Interval for non-blocking servo update (in ms)
+
+void setup() {
+  // Initialize serial communication
+  Serial.begin(9600);
+  pinMode(SOLENOID, OUTPUT);
+  pinMode(ledRed, OUTPUT);
+  pinMode(ledGreen, OUTPUT);
+
+  myservo.attach(11);  // Servo control on pin 11
+
+  // Initialize sensor pins
+  pinMode(pingTrig, OUTPUT); // change A0 pin mode to digital output
+  pinMode(pingEcho, INPUT);  // change A1 pin mode to digital input
+}
 
 
 
+void getDistance() {
+  long duration, inches, cm;
+
+  // The HC-SR04 is triggered by a HIGH pulse of 2 or more microseconds.
+  // Give a short LOW pulse beforehand to ensure a clean HIGH pulse
+  digitalWrite(pingTrig, LOW);
+  delayMicroseconds(5);
+  digitalWrite(pingTrig, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(pingTrig, LOW);
+
+  duration = pulseIn(pingEcho, HIGH);
+  distance = (duration / 2) / 29.1;
+
+  // Convert the time into a distance
+  inches = microsecondsToInches(duration);
+  cm = microsecondsToCentimeters(duration);
+  inches = constrain(inches, 100, 150);
+
+  Serial.print(inches);
+  Serial.print("in, ");
+  Serial.print(cm);
+  Serial.print("cm");
+  Serial.println();
+
+  delay(100);  // Small delay to prevent overwhelming the serial output
+
+ 
+}
+
+long microsecondsToInches(long microseconds) {
+  return microseconds / 74 / 2;
+}
+
+long microsecondsToCentimeters(long microseconds) {
+  return microseconds / 29 / 2;
+}
+
+void loop() {
+  // Main code to run repeatedly
+  getDistance();
+
+  int currentState;
+
+  // Check the condition to switch states
+  if (distance > 130) {
+    currentState = 0;
+    count = 0;
+
+  } else if (distance <= 100)  {
+    count +=1;
+    if (count > 1){
+      currentState = 1;
+    }
+   
+  }
+
+  // State transitions based on distance
+  switch (currentState) {
+    case 0:
+      CET_Turret_State.transitionTo(One);
+      break;
+    case 1:
+      CET_Turret_State.transitionTo(Two);
+      break;
+  }
+
+  // Update the state machine
+  CET_Turret_State.update();
+}
+
+void One_fn() {
+  digitalWrite(ledGreen, HIGH);
+  digitalWrite(SOLENOID, LOW);
+  digitalWrite(ledRed, LOW);
+
+  unsigned long currentMillis = millis();
+
+  // Non-blocking update every interval (e.g., every 20ms)
+  if (currentMillis - previousMillis >= interval) {
+    previousMillis = currentMillis;
+
+    // Update servo position non-blocking
+    pos += sweepDirection * stepSize;
+
+    // Reverse direction at limits
+    if (pos >= 2500 || pos <= 500) {
+      sweepDirection = -sweepDirection;
+    }
+
+    // Set the servo position
+    myservo.writeMicroseconds(pos);
+  }
+}
+
+void Two_fn() {
+  myservo.writeMicroseconds(pos);  // Keep servo at the current position
+  digitalWrite(ledGreen, LOW);
+  digitalWrite(SOLENOID, HIGH);
+  digitalWrite(ledRed, HIGH);
+  delay(50);  // Toggle LED for visual feedback
+  digitalWrite(ledRed, LOW);
+  delay(50);
+} 
+ 
 
