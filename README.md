@@ -171,6 +171,9 @@ Below are diagrams of the solenoid’s stroke based on the force applied, respon
 
 ![image](https://github.com/user-attachments/assets/a4e21cba-7b33-44f6-8f00-28380759c1a4)
 
+# Data communication and network interface
+	
+USB port: The USB port serves its function as the primary communication between the Arduino board and the PC. The Arduino is connected via external connection from the Arduino to the PC using a USB cable. This allows the board to send and receive signals for programming and also applies power to the Arduino board. The voltage applied from the PC meets the standard 5V requirement from the Arduino board. The USB is known as a high-level data communication subsystem
 
 
 
