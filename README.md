@@ -361,41 +361,63 @@ void loop() {
   }
 
   // Update the state machine
+ 
   CET_Turret_State.update();
+  
 }
 
 void One_fn() {
+  
   digitalWrite(ledGreen, HIGH);
+  
   digitalWrite(SOLENOID, LOW);
+  
   digitalWrite(ledRed, LOW);
 
   unsigned long currentMillis = millis();
 
   // Non-blocking update every interval (e.g., every 20ms)
+ 
   if (currentMillis - previousMillis >= interval) {
+    
     previousMillis = currentMillis;
 
+    
     // Update servo position non-blocking
+    
     pos += sweepDirection * stepSize;
 
     // Reverse direction at limits
+    
     if (pos >= 2500 || pos <= 500) {
+      
       sweepDirection = -sweepDirection;
+    
     }
 
     // Set the servo position
+    
     myservo.writeMicroseconds(pos);
+    
   }
 }
 
 void Two_fn() {
+  
   myservo.writeMicroseconds(pos);  // Keep servo at the current position
+  
   digitalWrite(ledGreen, LOW);
+  
   digitalWrite(SOLENOID, HIGH);
+  
   digitalWrite(ledRed, HIGH);
+  
   delay(50);  // Toggle LED for visual feedback
+  
   digitalWrite(ledRed, LOW);
+  
   delay(50);
+  
 } 
  
 
