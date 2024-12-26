@@ -579,6 +579,3 @@ void Two_fn() {
 
 Problems & Issues: Writing the program was relatively intermediate as there were simpler parts to writing the program and difficult parts. The simpler parts were defining variables, setting up the sensor and other components, and setting up a few logical statements. There however were difficult parts to logical statements in the program such as, how I was going to make the servo stop once the sensor detects motion and shoot. Initially the servo would complete a whole cycle then it would stop and shoot which isn’t how the system is supposed to work. It is supposed to stop and shoot upon detection of an object. The solution to that was modifying the program in a way where the limits of the servo could be disrupted before it makes its full sweep. This was done by creating the pos variable in combination with an OR statements and the limits of how far the servo would turn and the non-blocking interval arranged. This would then update in the next function that sets the servo to stop at the current position where an object is detected based on the statements written.
 
-# section D Appendix:
-
-Embedded controller Atmega2560:                                                                        
