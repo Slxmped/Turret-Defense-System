@@ -7,3 +7,7 @@ Embedded controller Atmega2560:
 Input Sensors Ultrasonic Sensor:
 
 ![image](https://github.com/user-attachments/assets/6c18ccf7-9a4f-4570-b3f7-50be3dbcacdb)
+
+Input and output interface circuits Singular Relay Module:
+![image](https://github.com/user-attachments/assets/f9a7b487-aacf-4076-b65b-e27647d426f9) ![image](https://github.com/user-attachments/assets/1c5c45e9-d202-4cca-a9c9-f00f996550a6)
+
