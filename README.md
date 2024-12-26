@@ -420,5 +420,163 @@ void Two_fn() {
   delay(50);
   
 } 
+
+
+ # Source Code Analysis:
  
+•	#include <FiniteStateMachine.h> and #include <servo.h> includes the finite state machine library and the servo library into the program.
+
+•	const int pingTrig = A0; sets the trig pin to analog pin 0 from the ultrasonic sensor to the arduino. Const int ping echo = A1; sets the echo pin from the sensor to analog pin 1 on the arduino.
+
+•	const int solenoid = 10; Sets the solenoid to be connected to pin 10 on the Arduino board.
+
+•	const byte Number_OF_STATES = 2; create two different states for the finite state machine.
+
+•	long distance = 0; holds the variable for distance for the finite state machine. When this changes, based on the condition states will change.
+
+•	int count = 0; is the false positive variable holder, if the turret happens to glitch out because of the sensor it will bypass any false positive detections until it is constant.
+
+•	int count2 = 0; Is another variable created to detect false positives.
+
+•	Servo myservo; Attaches the servo object to the variable myservo for further use.
+
+•	void One_fn() creates a variable that calls the function into place and activates it for its definition later in the program.
+
+•	void Two_fn() also creates another variable that calls the function into place and activates it for state two function definition later.
+
+•	State One = State(One_fn); initializes the first state and State Two = State(two_fn) initializes the second function.
+
+•	FSM CET_Turret_State = FSM(One) initializes the state machine to start at state one.
+
+•	#define ledRed 13 assigns the red LED to pin 13 and #define ledGreen 12 assigns the green LED to pin 12 on the Arduino.
+
+•	int pos = 1500; sets the starting position for the servo to be centered.
+
+•	int lastServoPosition = 1500; remembers the last servo position to be referred to.
+
+•	int SweepDirection = 1; sets the sweep direction for the Servo.
+
+•	int stepSize = 100; adjusts the speed of the servo when sweeping. The higher the step size the faster.
+
+•	unsigned long previousMillis = 0; creates a timer for the servo’s movement.
+
+•	const long interval = 20; creates a non-blocking interval which allows the servo to perform other tasks while waiting for the update to complete. Updates every 20ms.
+
+•	void setup(){ is where certain variables get initialized to perform a task.
+
+•	serial.begin(9600); establishes communication to the serial monitor.
+
+•	pinMode(SOLENOID, OUTPUT); establishes the solenoid to be an output.
+
+•	pinMode(ledRed, OUPTUT); establishes the red LED to be an output.
+
+•	pinMode(ledGreen, OUTPUT); establishes the green LED to be an output.
+
+•	myservo.attach(11); attaches the servo to pin 11 on the Arduino board.
+
+•	pinMode(pingTrig, OUTPUT); sets the trig pin on the ultrasonic sensor to an OUTPUT since it will send out signals.
+
+•	pinMode(pingEcho, INPUT); sets the echo pin to an INPUT since it receives signals.
+
+•	void getDistance(){ creates a variable that will obtain the distance for the ultrasonic sensor.
+
+•	long duration, inches, cm; creates variables for the ultrasonic sensor to use for setting each measurement requirement.
+
+•	digitalWrite(pingTrig, LOW); sets the trig pin to low meaning it is in an off state.
+
+•	delayMicroseconds(5); delays the next process by 5 microseconds.
+
+•	digitalWrite(pingTrig, HIGH) allows the trig pin to be high and activates it on the sensor.
+
+•	delayMicroseconds(10); allows for a 10 microsecond delay before the next process.
+
+•	digitalWrite(pingTrig, LOW); writes the trig pin low once again.
+
+•	duration = pulseIn(PingEcho, HIGH) writes the echo ping high. This entire process allows the ultrasonic sensor to send a receive signals.
+
+•	distance = (duration /2) /29.1; calculates the ultrasonic sensors distance detection based on the duration.
+
+•	inches = microsecondsToInches(duration); Converts the time of microseconds to inches and attaches this to the duration of the sensor.
+
+•	cm = microscondsToCentimeters(duration); applies the previous logic but for a centimeter conversion.
+
+•	inches = constrain(inches, 100, 150); contrains the inches to remain in between 100, 150.
+
+•	serial.print(inches); will print the value in inches to the serial monitor.
+
+•	serial.print(“in, “); will print “in” next to the inches value.
+
+•	serial.print(cm); will print the centimeter value.
+
+•	serial.print(“cm”); will print “cm” next to the centimeter value.
+
+•	serial.println(); will print another line to give space between values.
+
+•	delay(100); will give a small delay of 100ms.
+
+•	long microsecondsToInches(long microseconds){ will create a variable for microsecondsToInches and attach it to microseconds.
+
+•	return microseconds /74/2; will return microseconds for inches through calculation.
+
+•	long micorsecondsToCentimeters(long microseconds) { creates a variable for microsecondsToCentimeters and attaches it to microseconds.
+
+•	return microseconds /29/2; returns the calculation for centimeters in microseconds.
+
+•	void loop() { creates the function that will run repeatedly though the code.
+
+•	getDistance(); calls the get distance function into the main code space.
+
+•	if (distance > 130) { currentState = 0; count = 0; this if statement will detect that if the distance is greater then 130 the turret will remain in state 0 and the count will not increase.
+
+•	else if (distance <= 100) { count += 1;  if the distance is less than 100 for the sensor, the count will start to increase.
+
+•	if (count > 1){ currentState = 1; if the count is greater than 1 then the state will change to state 1 counting the false positives.
+
+•	Switch (currentState) { creates a switch case statement.
+
+•	case 0: CET_Turret_State.transitionTo(One); assigns the case to be state One for when state machine has to transition to state one.
+•	break; breaks the case statement made.
+
+•	case 1: CET_Turret_State.transitionTo(Two); assigns the state to be State 2 for when the state machine has to transition to state two.
+
+•	break; ends the case statement made.
+
+•	CET_Turret_State.update(); will update the turret state.
+
+•	void One_fn() { creates the function that will be responsible for how state one behaves.
+
+•	digitalWrite(ledGreen, HIGH); Turns the green LED on.
+
+•	digitalWrite(SOLENOID, LOW); Turns the solenoid off.
+
+•	digitalWrite(ledRed, LOW); Turns the red LED off.
+
+•	unsigned long currentMillis = millis(); creates a variable for current millis and attaches the millis object.
+
+•	if (currentMillis – previousMillis >= interval) {  previousMillis = currentMillis; creates an if statement that if the current milliseconds minus the previous milliseconds is greater than or equal to the interval value, then the previous millis will be equal to the currentMillis.
+
+•	pos += sweepDirection * stepSize; which is the servo position will be updated to be the sweep direction * stepsize which updates the motor speed.
+
+•	if (pos >= 2500 I I pos <= 500) { sweepDirection = -sweepDirection; will create if statement that if the servo position is at its max reading or lowest reading, the sweep direction will be reversed at its limits.
+
+•	myservo.writeMicroseconds(pos) will write the microseconds to the variable pos to set the servo position.
+
+•	void Two_fn() { creates a function for the second state’s operation.
+
+•	myservo.writeMicroseconds(pos); keeps the servo at the current position its moved to.
+
+•	digitalwrite(ledGreen, LOW); writes the green LED to be low and turn off.
+
+•	digitalwrite(SOLENOID, HIGH); turns the solenoid on.
+
+•	digitalWrite(ledRed, HIGH); writes the LED to be turned on.
+
+•	delay(50); gives the system a 50ms delay.
+
+•	digitalWrite(ledRed, LOW); turns the red LED off once again.
+
+•	delay(50); gives a 50ms delay making the red LED flash.
+
+Problems & Issues: Writing the program was relatively intermediate as there were simpler parts to writing the program and difficult parts. The simpler parts were defining variables, setting up the sensor and other components, and setting up a few logical statements. There however were difficult parts to logical statements in the program such as, how I was going to make the servo stop once the sensor detects motion and shoot. Initially the servo would complete a whole cycle then it would stop and shoot which isn’t how the system is supposed to work. It is supposed to stop and shoot upon detection of an object. The solution to that was modifying the program in a way where the limits of the servo could be disrupted before it makes its full sweep. This was done by creating the pos variable in combination with an OR statements and the limits of how far the servo would turn and the non-blocking interval arranged. This would then update in the next function that sets the servo to stop at the current position where an object is detected based on the statements written.
+
 
